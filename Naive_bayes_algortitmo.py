@@ -28,7 +28,7 @@ def navie_bayes(X,dados_csv):
     # tratar os dados de treinamento e separar os resultados necessários para o cálculo
     def database(dados):
 
-        Resultados={"Base de dados":"","classes":"","instancias":""}
+        Resultados={"Base de dados":"","classes":"","features":""}
         #separar apenas os dados de treinamento:
         database = pd.read_csv(f"{dados}",delimiter=',',header=0).to_numpy()
         Resultados["Base de dados"]=database
@@ -80,28 +80,46 @@ def navie_bayes(X,dados_csv):
                    vetor_aux.append(list(instancia))
             Ntc[classe]=vetor_aux
         # print(Ntc)
+        features=[]
+        n=0
+        for feature in atributos:
+            n+=1
+            aux=dict()
+            aux[feature]=list(categorias[n-1])
+            # print(aux[feature])
+            features.append(aux)
+        # print(features)
 
+        Resultados["features"]=features
+        # print(Resultados["features"])
+                
         return Resultados
 
     def prob_condicional_X_c(X,classe,dadosX):
         P=0
         database_X=dadosX["Base de dados"]
-        print(f"\033[1;33mClasse em análise: {classe}\033[m")
-        for Xi in X: #pra cada atributo do dado observado(vetor X)
-            Nc=len(X)# conta o número de vezes que a classe aparece -> |v|+ somatório(Nt'c)( já inicia sendo o tamanho de V)
+        features=dadosX["features"]
+        # print(features)
     
+
+        print(f"\033[1;33m\nClasse em análise: {classe}\033[m")
+        i=0
+        for Xi in X: #pra cada atributo do dado observado(vetor X)
+            i+=1
+            V=list(features[i-1].values())
+            V=len(V[0])#Número de clasificações possíveis pra aquela feature
+            Nc=V# conta o número de vezes que a classe aparece -> |v|+ somatório(Nt'c)( já inicia sendo o tamanho de V)
+            # print(V)
             Ntc=1#conta o número de vezes que o atributo aparace na classe( inicia com 1 por causa do add on smoothing)
-            
             for array_line in database_X:#percorre cada vetor("linha") dos dados de treinamento
                 array_line=list(array_line)
-
                 if classe in array_line:
                     Nc+=1
                 if Xi in array_line and classe in array_line:
                     Ntc+=1
 
             Pxic=round(Ntc/Nc,2)
-            P+=round(math.log(Pxic,10),2)
+            P+=round(math.log(Pxic,10),4)
             print(f"\033[1;34m\nAtributo em análise : {Xi.lstrip()}\033[m")
             print(f"P({Xi} / {classe}): {Ntc/Nc:.2f}")
         return P
@@ -122,10 +140,9 @@ def navie_bayes(X,dados_csv):
             # print(f"P({classe}) = {database(dados_csv)[classe]}") 
             C_map= max(probabilidade_soma, key=lambda key: probabilidade_soma[key])
             # print(C_map)
-            print(f"\n P(X/{classe}) : {probabilidade_soma[classe]:.2f}")
-        print(f"\n\033[1;34mCLASSE MAIS PROVÁVEL PARA A INSTÂNCIA : {i} : \033[1;33m{C_map} | \033[1;34mP(X/C) = {probabilidade_soma[C_map]:.2f} \033[m")
-        # print(database(dados_csv)["Base de dados"])
-        # print(type(database(dados_csv)["Base de dados"]))
+            print(f"\033[1;33m\n P(X/{classe}) : {10**probabilidade_soma[classe]:.2f}\033[m")
+        print(f"\n\033[1;34mCLASSE MAIS PROVÁVEL PARA A INSTÂNCIA : {i} : \033[1;33m{C_map} | \033[1;34mP(X/C) = {10**probabilidade_soma[C_map]:.2f} \033[m")
+
 
 navie_bayes("/home/syanne/Documentos/códigos/mat.concre/naive bayes/teste.csv","/home/syanne/Documentos/códigos/mat.concre/naive bayes/datase01.csv")
 
