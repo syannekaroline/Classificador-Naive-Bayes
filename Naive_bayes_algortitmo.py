@@ -116,7 +116,7 @@ def navie_bayes(X,dados_csv):
 
     #análise de cada instância recebida
     for instancia in instancias_analise:
-        print("\n","*"*100)
+        print("\n","="*100)
         print(f"\033[1;32m\nInstância em Análise (X): {instancia} \033[m")
 
         #Cálculo da probabilidade condicional de cada instância para cada classe - posteriori
@@ -130,4 +130,8 @@ def navie_bayes(X,dados_csv):
         #Resultado da classificação
         print(f"\n\033[1;34mCLASSE MAIS PROVÁVEL PARA A INSTÂNCIA : {instancia} : \033[1;33m{C_map} | \033[1;34mP(X/C) = Cmap = {10**probabilidade_soma[C_map]:.2f} \033[m")
 
-navie_bayes("/home/syanne/Documentos/códigos/Naive_Bayes/Instancias_para_classificar.csv","/home/syanne/Documentos/códigos/mat.concre/naive bayes/datase01.csv")
+#recebendo os dados do usuário
+
+print("{:=^100}".format("CLASSIFICADOR NAIVE BAYES"))
+print("\nO Cassificador Naive Bayes recebe :\nO caminho de um arquivo csv com instâncias que se quer analisar(deve haver o cabeçalho das features)\nO caminho do arquivo csv com as instâncias de treinamento \nE retorna o cálculo das probabiliddades bem como a classificação mais provável pra cada instância segundo o teorema de Naive Bayes.\n")
+navie_bayes(input("\nInsira o caminho do arquivo csv com as instâncias que se quer classificar: "),input("\nInsira o caminho do arquivo csv com os dados/instâncias de treinamento: "))
